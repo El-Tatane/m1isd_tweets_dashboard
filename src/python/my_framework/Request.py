@@ -1,11 +1,10 @@
 import http.server
-import socketserver
 import warnings
 
-from routes import ROUTES, clean_route
+from src.python.my_framework.router import ROUTES, clean_route
 
 
-class MyRequest(http.server.SimpleHTTPRequestHandler):
+class Request(http.server.SimpleHTTPRequestHandler):
 
     def do_GET(self):
 

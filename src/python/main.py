@@ -1,19 +1,19 @@
 import socketserver
 
-from MyRequest import MyRequest
-from Data import Data
-from routes import ROUTES
+from src.python.my_framework.Request import Request
+from src.python.my_framework.DataLoader import DataLoader
+from src.python.routes import ROUTES
 
 PORT = 80
-filepath = "tweets.csv"
+data_filepath = "tweets.csv"
 
 if __name__ == "__main__":
     print("start")
-    my_request = MyRequest
+    my_request = Request
 
     my_server = socketserver.TCPServer(("", PORT), my_request)
 
     # Star the server
     my_server.serve_forever()
 
-    # data = Data(filepath)
+    # data = DataLoader(data_filepath)
