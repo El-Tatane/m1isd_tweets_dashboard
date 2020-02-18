@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-class Data:
+class DataLoader:
 
     def __init__(self, path):
         self.raw_data = pd.read_csv(path, parse_dates=['date'])
