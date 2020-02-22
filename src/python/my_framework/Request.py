@@ -20,21 +20,21 @@ class Request(http.server.SimpleHTTPRequestHandler):
         # Extract query param
         route, args = self.parse_arg(self.path)
         print(args)
-
+        route = clean_route(route)
         if route is None or route not in ROUTES.keys():
             route = "error_404"
 
-        html = ROUTES[clean_route(route)]()
+        html = ROUTES[route](**args)
         print(html)
 
         # Writing the HTML contents with UTF-8
-        self.wfile.write(bytes(html, "utf8"))
+        self.wfile.write(bytes(str(html), "utf8"))
 
         return
 
     @staticmethod
     def parse_arg(string):
-        route, args = None, None
+        route, args = None, {}
 
         separator = string.find("?")
 
@@ -53,8 +53,8 @@ class Request(http.server.SimpleHTTPRequestHandler):
             for str_arg in str_args.split('&'):
                 key, value = str_arg.split("=")
                 args[key] = value
-            return args
+            return route, args
         except (LookupError, ValueError) as e:
             warnings.warn("Incorrect URL '{}".format(string))
-            return None, None
+            return None, {}
 

@@ -11,10 +11,7 @@ def clean_route(route):
 
 # Def decorateur router
 def set_route(route):
-    if route[0] != "/":
-        route = "/" + route
-    if route[-1] != "/":
-        route += "/"
+    route = clean_route(route)
 
     def wrapper_set_route(func):
         assert route not in ROUTES.keys(), "REDEFINITON OF EXISTING ROUTE '{}'".format(route)

@@ -4,7 +4,8 @@ import os
 class TemplateBuilder:
     def __init__(self, template_path):
         self.template_path = template_path
-        with open(os.path.join("src/ressources/templates/", self.template_path), "r") as f:
+        print(os.getcwd())
+        with open(os.path.join("../ressources/templates/", self.template_path), "r") as f:
             self.html = f.read()
         self.add_pos = self.html.find("<insert/>")
         self.html = self.html.replace("<insert/>", "")

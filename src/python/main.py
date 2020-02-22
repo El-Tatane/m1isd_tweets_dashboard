@@ -1,7 +1,7 @@
 import socketserver
 
 from src.python.my_framework.Request import Request
-from src.python.my_framework.DataLoader import DataLoader
+from src.python.DataLoader import DataLoader
 from src.python.routes import ROUTES
 
 PORT = 80
