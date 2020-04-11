@@ -8,7 +8,7 @@
     margin : auto;
 }
 
-#searchthis #search {
+#search {
     background-color: #ffffff;
     border-style: solid;
     border-width: 1px;
@@ -22,7 +22,7 @@
     letter-spacing: 1px;
 }
 
-#searchthis #search-button {
+#search-button {
     background-color: #E8B960;
     border-style: solid;
     border-width: 1px;
@@ -39,7 +39,7 @@
     color: #ffffff;
 }
 
-#searchthis #search-button:hover {
+#search-button:hover {
     background-color: #ffffff;
     color: #E8B960;
     cursor: pointer;

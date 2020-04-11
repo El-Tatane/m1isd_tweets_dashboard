@@ -2,17 +2,18 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="client.js"></script>
     <meta charset="UTF-8">
     <title>tweet platform</title>
 </head>
 <body>
 <div class="recherche_p">
 
-    <form action="/UrlOfTheServer" id="searchthis" method="get"> <!--get ou post a voir-->
-        <input id="search" name="q" type="text" placeholder="Research" />
-        <input id="search-button" type="submit" value="Tweet research" />
-    </form>
-
+    <!-- <form action="/UrlOfTheServer" id="searchthis" method="get">--> <!--get ou post a voir-->
+    <input id="search" name="q" type="text" placeholder="Research" />
+    <button id="search-button" onclick="modifyText()">Tweet research</button>
+    <!-- </form>-->
+    <p id = "tweet"></p>
 </div>
 </body>
 </html>
