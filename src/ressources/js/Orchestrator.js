@@ -1,47 +1,61 @@
 class Orchestrator {
     constructor() {
-        this.ServeurUrl = "http://localhost:80";
+        this.serverUrl = "http://localhost:80";
     }
 
-    ajax_request(route, callback) {
-        let response = '';
-        let xhr = new XMLHttpRequest();
-        if (!xhr) {
-            console.log('Abandon :( Impossible de créer une instance de XMLHTTP');
-            return false;
-        }
-        xhr.onreadystatechange = function () {
-            try {
-                if (this.readyState === XMLHttpRequest.DONE) {
-                    if (this.status === 200) {
-                        console.log('SERVER REPLY IS OK');
-                        response = this.responseText;
-                        console.log(response);
-                        callback(JSON.parse(response));
+    makeAjaxCall(url, methodType) {
+        let promiseObj = new Promise(function (resolve, reject) {
+            let xhr = new XMLHttpRequest();
+            xhr.open(methodType, url, true);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        console.log("xhr done successfully");
+                        let resp = xhr.responseText;
+                        let respJson = JSON.parse(resp);
+                        resolve(respJson);
                     } else {
-                        console.log('SERVER REPLY IS NOT OK'.concat(' erreur : ', this.responseText));
+                        reject(xhr.status);
+                        console.log("xhr failed");
                     }
                 } else {
-                    console.log('SERVER REPLY IS NOT YET READY...')
+                    console.log("xhr processing going on");
                 }
-            } catch (e) {
-                alert("Une exception s’est produite : " + e.description);
             }
-            return response;
-        };
-        xhr.open('GET', route);
-        xhr.send();
-        return xhr.onreadystatechange;
+            console.log("request sent succesfully");
+        });
+        return promiseObj;
     }
 
-    get_data(route, params, callback){
-        const complete_route = new Routes(this.ServeurUrl.concat('/', route), params);
-        let id_job = this.ajax_request(complete_route, {
-            (e) =>
-        });
-        console.log(id_job);
+    get_data(route, params) {
+        const complete_route = new Routes(this.serverUrl.concat('/', route), params).get_route();
+        this.makeAjaxCall(complete_route, "GET").then(this.get_job_result());
+
         //GET ID_JOB
         //check result is ready
         //
+    }
+
+    get_job_result(id_job) {
+        const complete_route = new Routes(this.serverUrl.concat('?id=', id_job)).get_route();
+        return this.makeAjaxCall(complete_route, "GET").then(function (result) {
+
+        })
+    }
+
+    action() {
+        let data = {};
+        return promise
+            .then(function () {
+
+            })
+            .then(function (sum) {
+                console.log('sum =', sum);
+            })
+            .then(function printXandY() {
+                // now use x and y
+                console.log('x =', data.x, 'y =', data.y);
+            });
     }
 }
