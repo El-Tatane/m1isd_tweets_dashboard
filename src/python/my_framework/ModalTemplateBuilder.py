@@ -1,4 +1,4 @@
-from src.python.my_framework.TemplateBuilder import TemplateBuilder
+from my_framework.TemplateBuilder import TemplateBuilder
 
 
 class ModalTemplateBuilder(TemplateBuilder):

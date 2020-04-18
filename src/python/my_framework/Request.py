@@ -1,7 +1,7 @@
 import http.server
 import warnings, os
 
-from src.python.my_framework.router import ROUTES, clean_route
+from my_framework.router import ROUTES, clean_route
 
 
 class Request(http.server.SimpleHTTPRequestHandler):

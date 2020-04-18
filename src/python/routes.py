@@ -1,10 +1,16 @@
 # coding=utf-8
 import os
 
-from src.python.my_framework.TemplateBuilder import TemplateBuilder
-from src.python.my_framework.ModalTemplateBuilder import ModalTemplateBuilder
-from src.python.my_framework.router import set_route, clean_route, ROUTES
-from src.python.my_framework.Orchestrator import JOB_RESULTS, set_orchestrator
+from my_framework.TemplateBuilder import TemplateBuilder
+from my_framework.ModalTemplateBuilder import ModalTemplateBuilder
+from my_framework.router import set_route, clean_route, ROUTES
+from my_framework.Orchestrator import JOB_RESULTS, set_orchestrator
+from DataLoader import DataLoader
+
+# PRE TREATMENT
+data_filepath = "D:/Users/zakar/Documents/Mes_Documents_2019_2020/ISD/langages_dynamiques/KN/projetJavaScript" \
+                "/m1isd_tweets_dashboard/tweets.csv "
+data_loader = DataLoader(data_filepath)
 
 
 # DECLARE ROUTE behind
@@ -12,9 +18,11 @@ from src.python.my_framework.Orchestrator import JOB_RESULTS, set_orchestrator
 @set_route("/")
 def route_index(**args):
     template = TemplateBuilder("index.html")
-    template.insert_double_element("h1", "Titre")
-    template.insert_double_element("p", "coucou")
-
+    template.insert_double_element("h1", "Analyse tweet")
+    template.insert_raw_html('<input id="search" name="q" type="text" placeholder="Research" />')
+    template.insert_raw_html('<button id="search-button" onclick=search()>Tweet research</button>')
+    template.insert_raw_html('<p id="res">...</p>')
+    
     mod = ModalTemplateBuilder("modal.html", "modal_filters", "valideeeee")
     mod.insert_simple_element("input placeholder='pays'")
     mod.insert_simple_element("br")
@@ -45,6 +53,21 @@ def route_job_id(**args):
 @set_route("job/result")
 def route_job_result(**args):
     return JOB_RESULTS
+
+
+"""
+@set_route("job/tweet_count")
+@set_orchestrator()
+def count_tweet(**args):
+    return 5
+"""
+
+
+@set_route("job/tweet_count")
+@set_orchestrator()
+def count_tweet(**args):
+    return data_loader.get_tweet_count()
+
 
 print(ROUTES)
 # print(JOB_RESULTS)
