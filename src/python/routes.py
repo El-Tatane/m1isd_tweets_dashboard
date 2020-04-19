@@ -1,12 +1,10 @@
-# coding=utf-8
-import os
-
 from my_framework.TemplateBuilder import TemplateBuilder
 from my_framework.ModalTemplateBuilder import ModalTemplateBuilder
 from my_framework.router import set_route, clean_route, ROUTES
 from my_framework.Orchestrator import JOB_RESULTS, set_orchestrator
 from DataLoader import DataLoader
 import json
+
 # PRE TREATMENT
 data_filepath = "D:/Users/zakar/Documents/Mes_Documents_2019_2020/ISD/langages_dynamiques/KN/projetJavaScript" \
                 "/m1isd_tweets_dashboard/tweets.csv "
@@ -23,15 +21,25 @@ def route_index(**args):
     template.insert_raw_html('<button id="search-button" onclick=search()>Tweet research</button>')
     template.insert_raw_html('<p id="res">...</p>')
     
-    mod = ModalTemplateBuilder("modal.html", "modal_filters", "valideeeee")
-    mod.insert_simple_element("input placeholder='pays'")
+    mod = ModalTemplateBuilder("modal.html", "modal_filters", "Sauvegarder")
+    mod.insert_double_element("h1", "Filtrer les tweets")
+    mod.insert_simple_element("input placeholder='Pseudo' id='username' type='text'")
     mod.insert_simple_element("br")
-    mod.insert_simple_element("input placeholder='localisation'")
+    mod.insert_simple_element("input placeholder='Pays' id='place_country' type='text'")
     mod.insert_simple_element("br")
-    mod.insert_simple_element("input placeholder='sexe'")
+    mod.insert_simple_element("input placeholder='Nombre min follower' id='user_followers_count' type='integer'")
+    mod.insert_simple_element("br")
+    mod.insert_simple_element("input placeholder='Langue' id='user_followers_count' type='integer'")
+    mod.insert_simple_element("br")
+    mod.insert_simple_element("input placeholder='Date début' id='ts_start' type='datetime-local'")
+    mod.insert_double_element("span", " à ")
+    mod.insert_simple_element("input placeholder='Date fin' id='ts_end' type='datetime-local'")
+    mod.insert_simple_element("br")
+    mod.insert_simple_element("input placeholder='Hashtag' id='hashtag' type='text'")
+    mod.insert_simple_element("br")
     mod.insert_simple_element("br")
 
-    template.insert_raw_html(mod.link_to_open_model("ouvre moi"))
+    template.insert_raw_html(mod.link_to_open_model("Modifier les filtres"))
     template.insert_raw_html(mod.get_html())
     return template.get_html()
 
