@@ -91,10 +91,13 @@ class DataLoader:
         return df.reset_index().sort_values('user_followers_count', ascending=False)
 
     ###############################################################################################################
+
     def get_others_tweet_id(self, objects, column_name):
         values = objects.split(',')
-        # if column_name == "text":
-        #     return self.raw_data.loc[(re.search(self.raw_data[column_name],))]['id'].tolist()
+        if column_name == "text":
+            f = lambda x: [i for i in x.split(' ') if i in values] != []
+            return self.raw_data.loc[(self.raw_data['text'].apply(f))]["id"].tolist()
+
         return self.raw_data.loc[(self.raw_data[column_name].isin(values))]['id'].tolist()
 
     def get_hashtag_tweet_id(self, objects):
@@ -129,10 +132,10 @@ class DataLoader:
 
     def get_tweet_main(self, dict_values):
         tweet_id = self.raw_data['id'].to_list()
-        modal_list = ["username", "text", "place_country", "lang"]
+        other_list = ["username", "text", "place_country", "lang"]
 
         for key, value in dict_values.items:
-            if key in modal_list:
+            if key in other_list:
                 tweet_id = list(set(tweet_id) & set(self.get_others_tweet_id(value, key)))
             if key == "user_followers_count ":
                 tweet_id = list(set(tweet_id) & set(self.get_followers_tweet_id(value)))
