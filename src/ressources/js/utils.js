@@ -1,6 +1,4 @@
 function fill_result(data) {
-    console.log("fill result");
-    console.log(data);
     document.getElementById("res").innerHTML = data;
 }
 
