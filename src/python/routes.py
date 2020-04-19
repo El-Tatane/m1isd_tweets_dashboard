@@ -6,7 +6,7 @@ from my_framework.ModalTemplateBuilder import ModalTemplateBuilder
 from my_framework.router import set_route, clean_route, ROUTES
 from my_framework.Orchestrator import JOB_RESULTS, set_orchestrator
 from DataLoader import DataLoader
-
+import json
 # PRE TREATMENT
 data_filepath = "D:/Users/zakar/Documents/Mes_Documents_2019_2020/ISD/langages_dynamiques/KN/projetJavaScript" \
                 "/m1isd_tweets_dashboard/tweets.csv "
@@ -52,21 +52,21 @@ def route_job_id(**args):
 
 @set_route("job/result")
 def route_job_result(**args):
-    return JOB_RESULTS
+    return json.dumps(JOB_RESULTS)
 
 
-"""
 @set_route("job/tweet_count")
 @set_orchestrator()
 def count_tweet(**args):
+    import time
+    time.sleep(5)
     return 5
-"""
 
 
-@set_route("job/tweet_count")
-@set_orchestrator()
-def count_tweet(**args):
-    return data_loader.get_tweet_count()
+# @set_route("job/tweet_count")
+# @set_orchestrator()
+# def count_tweet(**args):
+#     return data_loader.get_tweet_count()
 
 
 print(ROUTES)

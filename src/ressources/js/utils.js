@@ -1,5 +1,10 @@
+function fill_result(data) {
+    console.log("fill result");
+    console.log(data);
+    document.getElementById("res").innerHTML = data;
+}
+
 function search() {
     let serve = new Orchestrator();
-    let res = serve.get_data('job/tweet_count', '');
-    //document.getElementById("res").innerHTML = 5;
-}
+    serve.get_data('job/tweet_count', undefined, fill_result);
+ }

@@ -30,6 +30,6 @@ def set_orchestrator():
                 id_job = random.randrange(0, 999999)
             JOB_RESULTS[id_job] = "Started"
             threading.Thread(target=worker, args=(function, id_job, args)).start()
-            return json.dump({'id_job': id_job})
+            return json.dumps({'id_job': id_job})
         return create_job
     return wrapper_set_orchestrator
