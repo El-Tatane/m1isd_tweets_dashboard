@@ -1,44 +1,11 @@
 import pandas as pd
-
+import re
 
 class DataLoader:
 
     def __init__(self, path):
-        # self.raw_data = pd.read_csv(path, parse_dates=['date'])
+        self.raw_data = pd.read_csv(path, parse_dates=['date'])
         # print(self.raw_data.head(10))
-        pass
-
-    def get_hashtag_tweet_id(self, hashtag):
-        """
-        return a list of tweet ids which contains the hashtag
-        Parameters
-        ----------
-        hashtag: `str`
-            The hashtag of the tweet
-         Returns
-        -------
-        output : `list`
-           list of tweet ids
-        """
-        df = self.raw_data
-        return \
-            self.raw_data.loc[
-                (df['hashtag_0'] == hashtag) | (df['hashtag_1'] == hashtag) | (df['hashtag_0'] == hashtag)][
-                'id'].tolist()
-
-    def get_tweet_id(self, value, column_name):
-        """
-        get tweets of a country, date, user name, id ...
-        Parameters
-        ----------
-        value: `str`, `int`, `float`
-            the value that we are looking for (date, country_name, place_name ...)
-        Returns
-        -------
-        output : `list`
-            list of ids of the tweets of this user
-        """
-        return self.raw_data.loc[(self.raw_data[column_name] == value)]['id'].tolist()
 
     def get_tweet_latitude(self, id):
         """
@@ -123,5 +90,60 @@ class DataLoader:
             raise Exception('change one of the parameters of get_user_id_follow_per_country to True')
         return df.reset_index().sort_values('user_followers_count', ascending=False)
 
-    def get_tweet_count(self):
-        return 5
+    ###############################################################################################################
+    def get_others_tweet_id(self, objects, column_name):
+        values = objects.split(',')
+        # if column_name == "text":
+        #     return self.raw_data.loc[(re.search(self.raw_data[column_name],))]['id'].tolist()
+        return self.raw_data.loc[(self.raw_data[column_name].isin(values))]['id'].tolist()
+
+    def get_hashtag_tweet_id(self, objects):
+        """
+        return a list of tweet ids which contains the hashtag
+        Parameters
+        ----------
+         Returns
+        -------
+        output : `list`
+           list of tweet ids
+        """
+        df = self.raw_data
+        values = objects.split(',')
+        return \
+            self.raw_data.loc[
+                (df['hashtag_0'].isin(values)) | (df['hashtag_1'].isin(values)) | (df['hashtag_0'].isin(values))][
+                'id'].tolist()
+
+    def get_followers_tweet_id(self, followers):
+        return self.raw_data.loc[(self.raw_data["user_followers_count"] >= followers)]['id'].tolist()
+
+    def get_timestamp_tweet_id(self, ts_min=None, ts_max=None):
+        if ts_min is not None and ts_max is not None:
+            return self.raw_data.loc[(self.raw_data["timestamp"] <= ts_max) & (self.raw_data["timestamp"] >= ts_min)][
+                'id'].tolist()
+        else:
+            if ts_max is None:
+                return self.raw_data.loc[(self.raw_data["timestamp"] >= ts_min)]['id'].tolist()
+            else:
+                return self.raw_data.loc[(self.raw_data["timestamp"] <= ts_max)]['id'].tolist()
+
+    def get_tweet_main(self, dict_values):
+        tweet_id = self.raw_data['id'].to_list()
+        modal_list = ["username", "text", "place_country", "lang"]
+
+        for key, value in dict_values.items:
+            if key in modal_list:
+                tweet_id = list(set(tweet_id) & set(self.get_others_tweet_id(value, key)))
+            if key == "user_followers_count ":
+                tweet_id = list(set(tweet_id) & set(self.get_followers_tweet_id(value)))
+            if key == "timestamp":
+                tweet_id = list(set(tweet_id) & set(self.get_timestamp_tweet_id(value[0], value[1])))
+            if key == "hashtag":
+                tweet_id = list(set(tweet_id) & set(self.get_hashtag_tweet_id(value)))
+
+        if tweet_id == self.raw_data['id'].to_list():
+            print("NO DATA...")
+
+        return tweet_id
+
+
