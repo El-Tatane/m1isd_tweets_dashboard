@@ -5,10 +5,7 @@ from my_framework.Orchestrator import JOB_RESULTS, set_orchestrator
 from DataLoader import DataLoader
 import json
 
-# PRE TREATMENT
-data_filepath = "D:/Users/zakar/Documents/Mes_Documents_2019_2020/ISD/langages_dynamiques/KN/projetJavaScript" \
-                "/m1isd_tweets_dashboard/tweets.csv "
-data_loader = DataLoader(data_filepath)
+
 
 
 # DECLARE ROUTE behind

@@ -1,5 +1,5 @@
 list_file_path:
-  - path1
-  - path2
+  - "D:/CloudStation/Cours/4ISD/langage_dynamique/tweets.csv"
+  - "D:/CloudStation/Cours/4ISD/langage_dynamique/tweets2.csv"
 
 port: 80

@@ -2,27 +2,25 @@ import socketserver
 from my_framework.Request import Request
 from DataLoader import DataLoader
 from routes import ROUTES
+from yaml import safe_load
+import os
 
 PORT = 80
 data_filepath = ""
 
 if __name__ == "__main__":
-     print("start")
-     my_request = Request
 
-     my_server = socketserver.TCPServer(("", PORT), my_request)
+    # configuration file
+    this_dir = os.path.dirname(__file__)
+    with open(os.path.join(this_dir, "../..", "config.yml"), 'r') as stream:
+        DICT_CONFIG = safe_load(stream)
+
+    # Load data
+    data_loader = DataLoader(DICT_CONFIG["list_file_path"])
+
+    my_request = Request
+    my_server = socketserver.TCPServer(("", PORT), my_request)
 
     # Star the server
-     my_server.serve_forever()
-    # my_request.parse_arg()
-    #data = DataLoader(data_filepath)
-    #print(data.get_hashtag_tweet_id('airforce1'))
-    #print(data.get_tweet_id(4918871526, 'user_id'))
-    #print(data.get_tweet_id('jatno', 'user_name'))
+    my_server.serve_forever()
 
-    #print(data.get_tweet_latitude(1080002946824318976))
-    #print(data.get_tweet_longitude(1080002946824318976))
-    #print(data.get_user_id_most_or_least_follow(most=False))
-    #print(data.get_user_id_least_follow())
-    #print(data.get_user_id_follow_per_country(min_c = True))
-    #print(data.get_user_id_most_or_least_follow_in_country())
