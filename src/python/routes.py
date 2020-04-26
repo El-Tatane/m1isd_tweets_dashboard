@@ -63,6 +63,7 @@ def route_job_result(**args):
 @set_route("job/tweet_count")
 @set_orchestrator()
 def count_tweet(**args):
+    preprare_filter()
     import time
     time.sleep(5)
     return 5

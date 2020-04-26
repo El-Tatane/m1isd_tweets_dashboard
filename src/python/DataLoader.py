@@ -159,8 +159,8 @@ class DataLoader:
         df_filtered_tweets = self.df_raw_data.copy()
 
         if "timestamp" in dict_values.keys():
-            df_filtered_tweets = self.filter_timestamp_tweets(df_filtered_tweets, dict_values["timestamp"][0],
-                                                              dict_values["timestamp"][1])
+            df_filtered_tweets = self.filter_timestamp_tweets(df_filtered_tweets, dict_values["ts_start"],
+                                                              dict_values["ts_end"])
         if "user_followers_count " in dict_values.keys():
             df_filtered_tweets = self.filter_user_followers_count_tweets(df_filtered_tweets,
                                                                          dict_values["user_followers_count"])
