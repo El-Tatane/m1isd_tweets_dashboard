@@ -6,13 +6,11 @@ class DataLoader:
 
     def __init__(self, list_path):
 
-        self.df_raw_tweets = pd.DataFrame()
+        self.df_raw_data = pd.DataFrame()
 
         for path in list_path:
-            # df_tweets = pd.read_csv(path, parse_dates=['date'])
-            df_tweets = pd.read_csv(path, delimiter=";")
-            self.df_raw_data = pd.concat([self.df_raw_tweets, df_tweets], axis=0, sort=True, ignore_index=True)
-
+            df_tweets = pd.read_csv(path, delimiter=",", parse_dates=["date"])
+            self.df_raw_data = pd.concat([self.df_raw_data, df_tweets], axis=0, sort=True, ignore_index=True)
 
     def get_hashtag_tweet_id(self, hashtag):
         """
@@ -129,62 +127,54 @@ class DataLoader:
             raise Exception('change one of the parameters of get_user_id_follow_per_country to True')
         return df.reset_index().sort_values('user_followers_count', ascending=False)
 
-
     ###############################################################################################################
-    def get_others_tweet_id(self, objects, column_name):
-        values = objects.split(',')
-        # if column_name == "text":
-        #     return self.raw_data.loc[(re.search(self.raw_data[column_name],))]['id'].tolist()
-        return self.raw_data.loc[(self.raw_data[column_name].isin(values))]['id'].tolist()
 
-    def get_hashtag_tweet_id(self, objects):
-        """
-        return a list of tweet ids which contains the hashtag
-        Parameters
-        ----------
-         Returns
-        -------
-        output : `list`
-           list of tweet ids
-        """
-        df = self.raw_data
-        values = objects.split(',')
-        return \
-            self.raw_data.loc[
-                (df['hashtag_0'].isin(values)) | (df['hashtag_1'].isin(values)) | (df['hashtag_0'].isin(values))][
-                'id'].tolist()
+    def filter_text_equal_tweets(self, df_tweets, column_name, list_word):
+        return df_tweets.loc[(df_tweets[column_name].isin(list_word))]
 
-    def get_followers_tweet_id(self, followers):
-        return self.raw_data.loc[(self.raw_data["user_followers_count"] >= followers)]['id'].tolist()
+    def filter_text_contain_tweets(self, df_tweets, column_name, list_word):
+        fun = lambda x: [i for i in x.split(' ') if i in list_word] != []
+        return df_tweets.loc[(df_tweets[column_name].apply(fun))]
 
-    def get_timestamp_tweet_id(self, ts_min=None, ts_max=None):
+    def filter_hashtag_tweets(self, df_tweets, list_word):
+        return self.df_tweets.loc[
+                (df_tweets['hashtag_0'].isin(list_word)) |
+                (df_tweets['hashtag_1'].isin(list_word)) |
+                (df_tweets['hashtag_2'].isin(list_word))
+            ]
+
+    def filter_user_followers_count_tweets(self, df_tweets, followers_number):
+        return df_tweets.loc[(df_tweets["user_followers_count"] >= followers_number)]
+
+    def filter_timestamp_tweets(self, df_tweets, ts_min=None, ts_max=None):
         if ts_min is not None and ts_max is not None:
-            return self.raw_data.loc[(self.raw_data["timestamp"] <= ts_max) & (self.raw_data["timestamp"] >= ts_min)][
-                'id'].tolist()
+            return df_tweets.loc[(df_tweets["timestamp"] <= ts_max) & (df_tweets["timestamp"] >= ts_min)]
         else:
             if ts_max is None:
-                return self.raw_data.loc[(self.raw_data["timestamp"] >= ts_min)]['id'].tolist()
+                return df_tweets.loc[(df_tweets["timestamp"] >= ts_min)]
             else:
-                return self.raw_data.loc[(self.raw_data["timestamp"] <= ts_max)]['id'].tolist()
+                return df_tweets.loc[(df_tweets["timestamp"] <= ts_max)]
 
-    def get_tweet_main(self, dict_values):
-        tweet_id = self.raw_data['id'].to_list()
-        modal_list = ["username", "text", "place_country", "lang"]
+    def filter_tweets(self, dict_values):
+        df_filtered_tweets = self.df_raw_data.copy()
 
-        for key, value in dict_values.items:
-            if key in modal_list:
-                tweet_id = list(set(tweet_id) & set(self.get_others_tweet_id(value, key)))
-            if key == "user_followers_count ":
-                tweet_id = list(set(tweet_id) & set(self.get_followers_tweet_id(value)))
-            if key == "timestamp":
-                tweet_id = list(set(tweet_id) & set(self.get_timestamp_tweet_id(value[0], value[1])))
-            if key == "hashtag":
-                tweet_id = list(set(tweet_id) & set(self.get_hashtag_tweet_id(value)))
+        if "timestamp" in dict_values.keys():
+            df_filtered_tweets = self.filter_timestamp_tweets(df_filtered_tweets, dict_values["timestamp"][0],
+                                                              dict_values["timestamp"][1])
+        if "user_followers_count " in dict_values.keys():
+            df_filtered_tweets = self.filter_user_followers_count_tweets(df_filtered_tweets,
+                                                                         dict_values["user_followers_count"])
+        if "hashtag" in dict_values.keys():
+            df_filtered_tweets = self.filter_hashtag_tweets(df_filtered_tweets, dict_values["hashtag"])
 
-        if tweet_id == self.raw_data['id'].to_list():
-            print("NO DATA...")
+        if "text" in dict_values.keys():
+            df_filtered_tweets = self.filter_text_contain_tweets(df_filtered_tweets, "text", dict_values["text"])
 
-        return tweet_id
+        for key in ["username", "place_country", "lang"]:
+            if key in dict_values.keys():
+                df_filtered_tweets = self.filter_text_equal_tweets(df_filtered_tweets, key, dict_values[key])
+
+        return df_filtered_tweets
 
     def get_tweet_count(self):
         return 5

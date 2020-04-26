@@ -18,9 +18,11 @@ if __name__ == "__main__":
     # Load data
     data_loader = DataLoader(DICT_CONFIG["list_file_path"])
 
-    my_request = Request
-    my_server = socketserver.TCPServer(("", PORT), my_request)
+    # my_request = Request
+    # my_server = socketserver.TCPServer(("", PORT), my_request)
+    #
+    # # Star the server
+    # my_server.serve_forever()
 
-    # Star the server
-    my_server.serve_forever()
-
+    print("-------")
+    print(data_loader.filter_tweets({"timestamp": [1546327972665, 1546327972667]}))

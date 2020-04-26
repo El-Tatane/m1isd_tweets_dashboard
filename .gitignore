@@ -1,6 +1,4 @@
-/data/tweets.csv
+/data/*
 /venv/
 .idea
 __pycache__/
-src/python/my_framework/__init__.py
-src/python/my_framework/__pycache__/*
