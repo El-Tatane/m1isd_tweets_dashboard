@@ -1,4 +1,5 @@
 import pandas as pd
+import re
 
 
 class DataLoader:
@@ -127,6 +128,63 @@ class DataLoader:
         else:
             raise Exception('change one of the parameters of get_user_id_follow_per_country to True')
         return df.reset_index().sort_values('user_followers_count', ascending=False)
+
+
+    ###############################################################################################################
+    def get_others_tweet_id(self, objects, column_name):
+        values = objects.split(',')
+        # if column_name == "text":
+        #     return self.raw_data.loc[(re.search(self.raw_data[column_name],))]['id'].tolist()
+        return self.raw_data.loc[(self.raw_data[column_name].isin(values))]['id'].tolist()
+
+    def get_hashtag_tweet_id(self, objects):
+        """
+        return a list of tweet ids which contains the hashtag
+        Parameters
+        ----------
+         Returns
+        -------
+        output : `list`
+           list of tweet ids
+        """
+        df = self.raw_data
+        values = objects.split(',')
+        return \
+            self.raw_data.loc[
+                (df['hashtag_0'].isin(values)) | (df['hashtag_1'].isin(values)) | (df['hashtag_0'].isin(values))][
+                'id'].tolist()
+
+    def get_followers_tweet_id(self, followers):
+        return self.raw_data.loc[(self.raw_data["user_followers_count"] >= followers)]['id'].tolist()
+
+    def get_timestamp_tweet_id(self, ts_min=None, ts_max=None):
+        if ts_min is not None and ts_max is not None:
+            return self.raw_data.loc[(self.raw_data["timestamp"] <= ts_max) & (self.raw_data["timestamp"] >= ts_min)][
+                'id'].tolist()
+        else:
+            if ts_max is None:
+                return self.raw_data.loc[(self.raw_data["timestamp"] >= ts_min)]['id'].tolist()
+            else:
+                return self.raw_data.loc[(self.raw_data["timestamp"] <= ts_max)]['id'].tolist()
+
+    def get_tweet_main(self, dict_values):
+        tweet_id = self.raw_data['id'].to_list()
+        modal_list = ["username", "text", "place_country", "lang"]
+
+        for key, value in dict_values.items:
+            if key in modal_list:
+                tweet_id = list(set(tweet_id) & set(self.get_others_tweet_id(value, key)))
+            if key == "user_followers_count ":
+                tweet_id = list(set(tweet_id) & set(self.get_followers_tweet_id(value)))
+            if key == "timestamp":
+                tweet_id = list(set(tweet_id) & set(self.get_timestamp_tweet_id(value[0], value[1])))
+            if key == "hashtag":
+                tweet_id = list(set(tweet_id) & set(self.get_hashtag_tweet_id(value)))
+
+        if tweet_id == self.raw_data['id'].to_list():
+            print("NO DATA...")
+
+        return tweet_id
 
     def get_tweet_count(self):
         return 5
