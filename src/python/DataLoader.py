@@ -137,7 +137,7 @@ class DataLoader:
         return df_tweets.loc[(df_tweets[column_name].apply(fun))]
 
     def filter_hashtag_tweets(self, df_tweets, list_word):
-        return self.df_tweets.loc[
+        return df_tweets.loc[
                 (df_tweets['hashtag_0'].isin(list_word)) |
                 (df_tweets['hashtag_1'].isin(list_word)) |
                 (df_tweets['hashtag_2'].isin(list_word))
@@ -159,9 +159,9 @@ class DataLoader:
         df_filtered_tweets = self.df_raw_data.copy()
 
         if "timestamp" in dict_values.keys():
-            df_filtered_tweets = self.filter_timestamp_tweets(df_filtered_tweets, dict_values["ts_start"],
-                                                              dict_values["ts_end"])
-        if "user_followers_count " in dict_values.keys():
+            df_filtered_tweets = self.filter_timestamp_tweets(df_filtered_tweets, dict_values["timestamp"]["ts_start"],
+                                                              dict_values["timestamp"]["ts_end"])
+        if "user_followers_count" in dict_values.keys():
             df_filtered_tweets = self.filter_user_followers_count_tweets(df_filtered_tweets,
                                                                          dict_values["user_followers_count"])
         if "hashtag" in dict_values.keys():
@@ -170,7 +170,7 @@ class DataLoader:
         if "text" in dict_values.keys():
             df_filtered_tweets = self.filter_text_contain_tweets(df_filtered_tweets, "text", dict_values["text"])
 
-        for key in ["username", "place_country", "lang"]:
+        for key in ["user_name", "place_country", "lang"]:
             if key in dict_values.keys():
                 df_filtered_tweets = self.filter_text_equal_tweets(df_filtered_tweets, key, dict_values[key])
 

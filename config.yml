@@ -1,4 +1,4 @@
 list_file_path:
-  - "D:/CloudStation/Cours/4ISD/langage_dynamique/tweets.csv"
+  - "D:/Users/zakar/Documents/Mes_Documents_2019_2020/ISD/semestre1/langages_dynamiques/KN/projetJavaScript/m1isd_tweets_dashboard/tweets.csv"
 
 port: 80

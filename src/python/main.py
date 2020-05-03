@@ -24,4 +24,6 @@ if __name__ == "__main__":
     # Star the server
     my_server.serve_forever()
 
-
+    # df = data_loader.filter_tweets({"text": ["Mau"], "timestamp": {"ts_start": None, "ts_end": None}})
+    #
+    # print(df["user_id"])
