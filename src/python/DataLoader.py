@@ -1,12 +1,16 @@
 import pandas as pd
-import re
+import my_framework as mf
+from initialization import DICT_CONFIG
 
 
-class DataLoader:
+class DataLoader(metaclass=mf.Singleton):
 
-    def __init__(self, list_path):
+    def __init__(self, list_path=None):
+        if list_path is None:
+            list_path = []
 
         self.df_raw_data = pd.DataFrame()
+        self.cache = mf.Cache(DICT_CONFIG["cache_size"])
 
         for path in list_path:
             df_tweets = pd.read_csv(path, delimiter=",", parse_dates=["date"])
@@ -130,6 +134,8 @@ class DataLoader:
     ###############################################################################################################
 
     def filter_text_equal_tweets(self, df_tweets, column_name, list_word):
+        if isinstance(list_word, str):
+            list_word = [list_word]
         return df_tweets.loc[(df_tweets[column_name].isin(list_word))]
 
     def filter_text_contain_tweets(self, df_tweets, column_name, list_word):
@@ -156,11 +162,12 @@ class DataLoader:
                 return df_tweets.loc[(df_tweets["timestamp"] <= ts_max)]
 
     def filter_tweets(self, dict_values):
+        print(dict_values)
         df_filtered_tweets = self.df_raw_data.copy()
 
-        if "timestamp" in dict_values.keys():
-            df_filtered_tweets = self.filter_timestamp_tweets(df_filtered_tweets, dict_values["timestamp"]["ts_start"],
-                                                              dict_values["timestamp"]["ts_end"])
+        if "ts_start" in dict_values.keys() or "ts_end" in dict_values.keys():
+            df_filtered_tweets = self.filter_timestamp_tweets(df_filtered_tweets, dict_values.get("ts_start", None),
+                                                              dict_values.get("ts_end", None))
         if "user_followers_count" in dict_values.keys():
             df_filtered_tweets = self.filter_user_followers_count_tweets(df_filtered_tweets,
                                                                          dict_values["user_followers_count"])
@@ -173,8 +180,16 @@ class DataLoader:
         for key in ["user_name", "place_country", "lang"]:
             if key in dict_values.keys():
                 df_filtered_tweets = self.filter_text_equal_tweets(df_filtered_tweets, key, dict_values[key])
-
         return df_filtered_tweets
 
-    def get_tweet_count(self):
-        return 5
+    def get_filter_tweets_with_cache(self, params):
+        df_data = self.cache.get_cache(params)
+        if df_data is None:
+            # Cache doesn't exist
+            df_data = self.filter_tweets(params)
+            self.cache.add_element(params, df_data)
+        return df_data
+
+    def get_tweet_count(self, params):
+        df = self.get_filter_tweets_with_cache(params)
+        return df.shape[0]

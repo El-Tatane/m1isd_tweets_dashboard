@@ -2,31 +2,32 @@ from my_framework.TemplateBuilder import TemplateBuilder
 from my_framework.ModalTemplateBuilder import ModalTemplateBuilder
 from my_framework.router import set_route, clean_route, ROUTES
 from my_framework.Orchestrator import JOB_RESULTS, set_orchestrator
-from DataLoader import DataLoader
 import json
+from DataLoader import DataLoader
+from utils import clean_filter_value
+import time
 
-
-
+data_loader = DataLoader()
 
 # DECLARE ROUTE behind
+
 
 @set_route("/")
 def route_index(**args):
     template = TemplateBuilder("index.html")
     template.insert_double_element("h1", "Analyse tweet")
-    template.insert_raw_html('<input id="search" name="q" type="text" placeholder="Research" />')
-    template.insert_raw_html('<button id="search-button" onclick=search()>Tweet research</button>')
+    template.insert_raw_html('<button id="search-button" onclick=search()>UPDATE</button>')
     template.insert_raw_html('<p id="res">...</p>')
     
     mod = ModalTemplateBuilder("modal.html", "modal_filters", "Sauvegarder")
     mod.insert_double_element("h1", "Filtrer les tweets")
-    mod.insert_simple_element("input placeholder='Pseudo' id='username' type='text'")
+    mod.insert_simple_element("input placeholder='Pseudo' id='user_name' type='text'")
     mod.insert_simple_element("br")
     mod.insert_simple_element("input placeholder='Pays' id='place_country' type='text'")
     mod.insert_simple_element("br")
     mod.insert_simple_element("input placeholder='Nombre min follower' id='user_followers_count' type='integer'")
     mod.insert_simple_element("br")
-    mod.insert_simple_element("input placeholder='Langue' id='user_followers_count' type='integer'")
+    mod.insert_simple_element("input placeholder='Langue' id='lang' type='integer'")
     mod.insert_simple_element("br")
     mod.insert_simple_element("input placeholder='Date début' id='ts_start' type='datetime-local'")
     mod.insert_double_element("span", " à ")
@@ -63,10 +64,12 @@ def route_job_result(**args):
 @set_route("job/tweet_count")
 @set_orchestrator()
 def count_tweet(**args):
-    #preprare_filter()
-    import time
-    time.sleep(5)
-    return 5
+    print("before", args)
+    dict_clean_params = clean_filter_value(args)
+    print("clean params", dict_clean_params)
+    return data_loader.get_tweet_count(dict_clean_params)
+
+
 
 
 # @set_route("job/tweet_count")
