@@ -7,11 +7,13 @@ ts_now = int(time.time()) * 1000
 
 
 def clean_special_char(value):
-    dict_replace = {"%20": " ", '"': "%22", "%3C": "<", "%3E": ">"}
+    # dict_replace = {"%20": " ", '"': "%22", "%3C": "<", "%3E": ">"}
 
-    for before, after in dict_replace.items():
-        value = value.replace(before, after)
-    return value
+    # for before, after in dict_replace.items():
+    #     value = value.replace(before, after)
+    # return value.decode("ISO-8859-1")
+    import urllib
+    return urllib.parse.unquote_plus(value) # solve encoding problem
 
 
 def ts_sec_to_milli(value):
@@ -41,8 +43,10 @@ def clean_filter_interval(value, minimum=None, maximum=None):
     return value
 
 
-def split_str_to_list(value, sep=","):
-    return value.split(sep)
+def split_str_to_list(value, sep=",", other_sep=None):
+    if other_sep is not None:
+        value = value.replace(other_sep, sep)
+    return [el for el in value.split(sep) if el != ""]
 
 
 def clean_filter_value(dict_params):
@@ -57,7 +61,12 @@ def clean_filter_value(dict_params):
                                          "params": {"minimum": ts_created_twitter, "maximum": ts_now}},
                             "ts_end": {"fun": [clean_special_char, clean_filter_int,ts_sec_to_milli, clean_filter_interval],
                                        "params": {"minimum": ts_created_twitter, "maximum": ts_now}},
-                            "hashtag": {"fun": [clean_special_char, split_str_to_list, clean_filter_string]}}
+                            "hashtag": {"fun": [clean_special_char, split_str_to_list, clean_filter_string]},
+                            "ten_number": {"fun": [clean_special_char, clean_filter_int, clean_filter_interval],
+                                           "params": {"minimum": 0}},
+                            "text": {"fun": [clean_special_char, split_str_to_list, clean_filter_string],
+                                    "params": {"other_sep": " "}}
+                            }
 
     for name, dict_info_filter in dict_all_info_filter.items():
         if name not in dict_params.keys():
@@ -88,4 +97,3 @@ if __name__ == "__main__":
           "hashtag": "12"}
     print("res", clean_filter_value(pp))
 
-# list_useful_param = {key: value for key, value in dict_params.items() if key in list_param and value is not None}

@@ -1,10 +1,11 @@
 from .Singleton import Singleton
 
+
 class Cache(metaclass=Singleton):
 
     def __init__(self, size):
         self.size = size
-        self.data = {}
+        self.data = {}  # key: hash(str(dict_param)), value: df_filtred_data
         self.order = [None] * size
         self.pos = 0
 

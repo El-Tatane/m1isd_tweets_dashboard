@@ -21,7 +21,6 @@ class Request(http.server.SimpleHTTPRequestHandler):
 
         if sendReply == True:
             # Open the static file requested and send it
-            print()
             f = open(os.getcwd() + "/../"+ self.path)
             self.send_response(200)
             self.send_header('Content-type', mimetype)
@@ -37,11 +36,8 @@ class Request(http.server.SimpleHTTPRequestHandler):
         # Whenever using 'send_header', you also have to call 'end_headers'
         self.end_headers()
 
-
-
         # Extract query param
         route, args = self.parse_arg(self.path)
-        print(args)
         route = clean_route(route)
         if route is None or route not in ROUTES.keys():
             route = "/error_404/"

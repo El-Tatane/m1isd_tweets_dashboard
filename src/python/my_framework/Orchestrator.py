@@ -8,7 +8,7 @@ JOB_RESULTS = {}
 
 def worker(function, id_job, args):
     """thread worker function"""
-    time.sleep(1)
+    # time.sleep(1)
     global JOB_RESULTS
     print("debut worker %s" % id_job)
     verrou = threading.Lock()

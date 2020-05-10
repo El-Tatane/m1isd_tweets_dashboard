@@ -1,6 +1,9 @@
 import pandas as pd
 import my_framework as mf
 from initialization import DICT_CONFIG
+from threading import Lock
+
+lock = Lock()
 
 
 class DataLoader(metaclass=mf.Singleton):
@@ -139,7 +142,8 @@ class DataLoader(metaclass=mf.Singleton):
         return df_tweets.loc[(df_tweets[column_name].isin(list_word))]
 
     def filter_text_contain_tweets(self, df_tweets, column_name, list_word):
-        fun = lambda x: [i for i in x.split(' ') if i in list_word] != []
+        # fun = lambda x: [i for i in x.split(' ') if i in list_word] != []     # OR
+        fun = lambda x: set(list_word).issubset(x.split(' '))                   # AND
         return df_tweets.loc[(df_tweets[column_name].apply(fun))]
 
     def filter_hashtag_tweets(self, df_tweets, list_word):
@@ -183,13 +187,47 @@ class DataLoader(metaclass=mf.Singleton):
         return df_filtered_tweets
 
     def get_filter_tweets_with_cache(self, params):
-        df_data = self.cache.get_cache(params)
-        if df_data is None:
-            # Cache doesn't exist
-            df_data = self.filter_tweets(params)
-            self.cache.add_element(params, df_data)
-        return df_data
+        with lock:  # Care thread problem
+            df_data = self.cache.get_cache(params)
+            if df_data is None:
+                # Cache doesn't exist
+                df_data = self.filter_tweets(params)
+                self.cache.add_element(params, df_data)
+            return df_data.copy()   # return copy to avoid thread problem
 
     def get_tweet_count(self, params):
         df = self.get_filter_tweets_with_cache(params)
         return df.shape[0]
+
+    def get_country_count(self, params):
+        df = self.get_filter_tweets_with_cache(params)
+        return df["place_country"].unique().shape[0]
+
+    def get_user_name_count(self, params):
+        df = self.get_filter_tweets_with_cache(params)
+        return df["user_name"].unique().shape[0]
+
+    def get_lang_count(self, params):
+        df = self.get_filter_tweets_with_cache(params)
+        return df["lang"].unique().shape[0]
+
+    def get_ts_start(self, params):
+        df = self.get_filter_tweets_with_cache(params)
+        return int(df["timestamp"].min()) // 1000
+
+    def get_ts_end(self, params):
+        df = self.get_filter_tweets_with_cache(params)
+        return int(df["timestamp"].max()) // 1000
+
+    def get_tweet_contain(self, params, ten_number):
+        df = self.get_filter_tweets_with_cache(params)
+        df = df.loc[:, ["user_name", "timestamp", "text"]]  # not tested
+        return self.filter_ten(df, ten_number).to_dict("records")
+
+    def filter_ten(self, df_data, ten_number):
+        # 0 -> 0-9 , 1 -> 10-19 ,  2 -> 20-29
+        first_index = ten_number * 10
+        last_index = min(ten_number*10+10, df_data.shape[0])
+        if first_index >= df_data.shape[0]:
+            return pd.DataFrame()
+        return df_data.iloc[first_index: last_index]
