@@ -19,6 +19,8 @@ class Routes {
                 }
             }
          }
+        console.log("ROUTE JAVASCRIPT :")
+        console.log(route)
         return route;
     }
 }

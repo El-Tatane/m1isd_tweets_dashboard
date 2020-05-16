@@ -4,6 +4,8 @@ class Orchestrator {
     }
 
     makeAjaxCall(url, methodType) {
+        console.log("URL : ")
+        console.log(url)
         return new Promise(function (resolve, reject) {
             let xhr = new XMLHttpRequest();
             xhr.open(methodType, url, true);
@@ -11,6 +13,7 @@ class Orchestrator {
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
+                        console.log(xhr.responseText)
                         resolve(JSON.parse(xhr.responseText));
                     } else {
                         reject(xhr.status);
