@@ -139,7 +139,7 @@ class DataLoader(metaclass=mf.Singleton):
     def filter_text_equal_tweets(self, df_tweets, column_name, list_word):
         if isinstance(list_word, str):
             list_word = [list_word]
-        return df_tweets.loc[(df_tweets[column_name].isin(list_word))]
+        return df_tweets[df_tweets[column_name].isin(list_word)]
 
     def filter_text_contain_tweets(self, df_tweets, column_name, list_word):
         fun = lambda x: [i for i in x.split(' ') if i in list_word] != []     # OR
@@ -147,6 +147,8 @@ class DataLoader(metaclass=mf.Singleton):
         return df_tweets.loc[(df_tweets[column_name].apply(fun))]
 
     def filter_hashtag_tweets(self, df_tweets, list_word):
+        if isinstance(list_word, str):
+            list_word = [list_word]
         return df_tweets.loc[
                 (df_tweets['hashtag_0'].isin(list_word)) |
                 (df_tweets['hashtag_1'].isin(list_word)) |
@@ -166,7 +168,6 @@ class DataLoader(metaclass=mf.Singleton):
                 return df_tweets.loc[(df_tweets["timestamp"] <= ts_max)]
 
     def filter_tweets(self, dict_values):
-        print(dict_values)
         df_filtered_tweets = self.df_raw_data.copy()
 
         if "ts_start" in dict_values.keys() or "ts_end" in dict_values.keys():
@@ -227,7 +228,8 @@ class DataLoader(metaclass=mf.Singleton):
 
     def get_tweet_contain(self, params, ten_number):
         df = self.get_filter_tweets_with_cache(params)
-        df = df.loc[:, ["user_name", "timestamp", "text"]]  # not tested
+        df = df.loc[:, ["user_name", "timestamp", "text"]]
+        df["timestamp"] = df["timestamp"] / 1000
         return self.filter_ten(df, ten_number).to_dict("records")
 
     def filter_ten(self, df_data, ten_number):
@@ -253,7 +255,6 @@ class DataLoader(metaclass=mf.Singleton):
         df_0 = df[["hashtag_0"]].dropna().groupby(["hashtag_0"]).size()
         df_1 = df[["hashtag_1"]].dropna().groupby(["hashtag_1"]).size()
         df_2 = df[["hashtag_2"]].dropna().groupby(["hashtag_2"]).size()
-        print( df_0.add(df_1, fill_value=0).add(df_2, fill_value=0).astype(int).to_dict() )
         return df_0.add(df_1, fill_value=0).add(df_2, fill_value=0).astype(int).to_dict()
 
     def country_repartition(self, params):

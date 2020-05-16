@@ -22,7 +22,7 @@ def ts_sec_to_milli(value):
 
 def clean_filter_string(value):
     if isinstance(value, list):
-        map(lambda x: str(x.strip()), value)
+        value = list(map(lambda x: str(x.strip()), value))
     else:
         value = str(value.strip())
     return value
@@ -51,11 +51,11 @@ def split_str_to_list(value, sep=",", other_sep=None):
 
 def clean_filter_value(dict_params):
     res = {}
-    dict_all_info_filter = {"user_name": {"fun": [clean_special_char, clean_filter_string]},
-                            "place_country": {"fun": [clean_special_char,split_str_to_list, clean_filter_string]},
+    dict_all_info_filter = {"user_name": {"fun": [clean_special_char, split_str_to_list, clean_filter_string]},
+                            "place_country": {"fun": [clean_special_char, split_str_to_list, clean_filter_string]},
                             "user_followers_count": {"fun": [clean_special_char, clean_filter_int, clean_filter_interval],
                                                      "params": {"minimum": 0}},
-                            "lang": {"fun": [clean_special_char, clean_filter_string]},
+                            "lang": {"fun": [clean_special_char, split_str_to_list, clean_filter_string]},
 
                             "ts_start": {"fun": [clean_special_char, clean_filter_int, ts_sec_to_milli, clean_filter_interval],
                                          "params": {"minimum": ts_created_twitter, "maximum": ts_now}},
