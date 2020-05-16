@@ -19,6 +19,13 @@ def worker(function, id_job, args):
     verrou.acquire()
     JOB_RESULTS[id_job] = result
     verrou.release()
+
+    # clear result to avoid out memory
+    time.sleep(30)
+
+    verrou.acquire()
+    JOB_RESULTS.pop(id_job)
+    verrou.release()
     return
 
 

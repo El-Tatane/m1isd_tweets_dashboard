@@ -18,11 +18,10 @@ class ModalTemplateBuilder(TemplateBuilder):
 
     def insert_class(self, my_class):
         self.html = "{} {} {}".format(self.html[:self.class_modal_pos],
-                                             my_class,
-                                             self.html[self.class_modal_pos:])
+                                      my_class,
+                                      self.html[self.class_modal_pos:])
 
         self.class_modal_pos += len(my_class)
 
-    def link_to_open_model(self, txt):
-        return """<a href="{}" class="js-modal">{}</a>""".format(self.modal_id, txt)
-
+    def link_to_open_model(self, txt, id_button):
+        return """<a id='{}' href="{}" class="js-modal">{}</a>""".format(id_button, self.modal_id, txt)

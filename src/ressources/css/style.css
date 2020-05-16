@@ -51,7 +51,7 @@ body, html {
     letter-spacing: 1px;
 }
 
-#button_update {
+#id_button_open_modal {
     background-color: #E8B960;
     border-style: solid;
     border-width: 1px;
@@ -68,7 +68,7 @@ body, html {
     color: #ffffff;
 }
 
-#button_update:hover {
+#id_button_open_modal:hover {
     background-color: #ffffff;
     color: #E8B960;
     cursor: pointer;

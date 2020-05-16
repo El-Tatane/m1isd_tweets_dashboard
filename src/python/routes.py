@@ -17,7 +17,7 @@ data_loader = DataLoader()
 def route_index(**args):
     template = TemplateBuilder("index.html")
     template.insert_double_element("h1", "Analyse tweet")
-    template.insert_raw_html('<button id="button_update" onclick=update_all()>UPDATE</button>')
+    # template.insert_raw_html('<button id="button_update" onclick=update_all()>UPDATE</button>')
     template.insert_raw_html('<div>Total tweets : <span id="nb_total_tweet">...</span></div>')
     template.insert_raw_html('<div>Total country : <span id="nb_total_country">...</span></div>')
     template.insert_raw_html('<div>Total user : <span id="nb_total_user_name">...</span></div>')
@@ -27,6 +27,13 @@ def route_index(**args):
     template.insert_raw_html('<table border="1"><tr>'
                              '<th>user</th> <th>date</th> <th>text</th>'
                              '</tr><tbody id="table_list_tweet"></tbody></table>')
+    template.insert_raw_html('<a onClick="fill_tweet_contain(\'start\')"> &lt&lt </a>')
+    template.insert_raw_html('<a onClick="fill_tweet_contain(\'before\')"> &lt </a>')
+    template.insert_raw_html('<span id="span_tweet_navigate_start"> 0 </span>')
+    template.insert_raw_html('<span> / </span>')
+    template.insert_raw_html('<span id="span_tweet_navigate_max"> 4 </span>')
+    template.insert_raw_html('<a onClick="fill_tweet_contain(\'next\')"> &gt </a>')
+    template.insert_raw_html('<a onClick="fill_tweet_contain(\'last\')"> &gt&gt </a>')
 
     mod = ModalTemplateBuilder("modal.html", "modal_filters", "Sauvegarder")
     mod.insert_double_element("h1", "Filtrer les tweets")
@@ -49,7 +56,7 @@ def route_index(**args):
     mod.insert_simple_element("br")
 
     template.insert_simple_element("br")
-    template.insert_raw_html(mod.link_to_open_model("Modifier les filtres"))
+    template.insert_raw_html(mod.link_to_open_model("Modifier les filtres", "id_button_open_modal"))
     template.insert_raw_html(mod.get_html())
     return template.get_html()
 
@@ -122,6 +129,24 @@ def tweet_contain(**args):
     ten_number = dict_clean_params.pop("ten_number")
     return data_loader.get_tweet_contain(dict_clean_params, ten_number)
 
+@set_route("job/country_repartition")
+@set_orchestrator()
+def country_repartition(**args):
+    dict_clean_params = clean_filter_value(args)
+    return data_loader.country_repartition(dict_clean_params)
+
+@set_route("job/lang_repartition")
+@set_orchestrator()
+def language_repartition(**args):
+    dict_clean_params = clean_filter_value(args)
+    return data_loader.generic_repartition(dict_clean_params, "lang")
+
+@set_route("job/hashtag_repartition")
+@set_orchestrator()
+def hashtag_repartition(**args):
+    dict_clean_params = clean_filter_value(args)
+    print(dict_clean_params)
+    return data_loader.hashtag_repartition(dict_clean_params)
 
 print(ROUTES)
 # print(JOB_RESULTS)

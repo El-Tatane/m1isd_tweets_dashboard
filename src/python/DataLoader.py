@@ -142,8 +142,8 @@ class DataLoader(metaclass=mf.Singleton):
         return df_tweets.loc[(df_tweets[column_name].isin(list_word))]
 
     def filter_text_contain_tweets(self, df_tweets, column_name, list_word):
-        # fun = lambda x: [i for i in x.split(' ') if i in list_word] != []     # OR
-        fun = lambda x: set(list_word).issubset(x.split(' '))                   # AND
+        fun = lambda x: [i for i in x.split(' ') if i in list_word] != []     # OR
+        # fun = lambda x: set(list_word).issubset(x.split(' '))                   # AND
         return df_tweets.loc[(df_tweets[column_name].apply(fun))]
 
     def filter_hashtag_tweets(self, df_tweets, list_word):
@@ -213,11 +213,17 @@ class DataLoader(metaclass=mf.Singleton):
 
     def get_ts_start(self, params):
         df = self.get_filter_tweets_with_cache(params)
-        return int(df["timestamp"].min()) // 1000
+        try:
+            return int(df["timestamp"].min()) // 1000
+        except:
+            return "."      # to avoid bug because of not data
 
     def get_ts_end(self, params):
         df = self.get_filter_tweets_with_cache(params)
-        return int(df["timestamp"].max()) // 1000
+        try:
+            return int(df["timestamp"].max()) // 1000
+        except:
+            return "."      # to avoid bug because of not data
 
     def get_tweet_contain(self, params, ten_number):
         df = self.get_filter_tweets_with_cache(params)
@@ -226,8 +232,31 @@ class DataLoader(metaclass=mf.Singleton):
 
     def filter_ten(self, df_data, ten_number):
         # 0 -> 0-9 , 1 -> 10-19 ,  2 -> 20-29
-        first_index = ten_number * 10
-        last_index = min(ten_number*10+10, df_data.shape[0])
+        if ten_number == -1:
+            # get last element
+            first_index = df_data.shape[0] // 10 * 10
+            last_index = df_data.shape[0]
+        else:
+            first_index = ten_number * 10
+            last_index = min(ten_number*10+10, df_data.shape[0])
+
         if first_index >= df_data.shape[0]:
             return pd.DataFrame()
         return df_data.iloc[first_index: last_index]
+
+    def generic_repartition(self, params, col_name):
+        df = self.get_filter_tweets_with_cache(params)
+        return df.groupby([col_name]).size().to_dict()
+
+    def hashtag_repartition(self, params):
+        df = self.get_filter_tweets_with_cache(params)
+        df_0 = df[["hashtag_0"]].dropna().groupby(["hashtag_0"]).size()
+        df_1 = df[["hashtag_1"]].dropna().groupby(["hashtag_1"]).size()
+        df_2 = df[["hashtag_2"]].dropna().groupby(["hashtag_2"]).size()
+        print( df_0.add(df_1, fill_value=0).add(df_2, fill_value=0).astype(int).to_dict() )
+        return df_0.add(df_1, fill_value=0).add(df_2, fill_value=0).astype(int).to_dict()
+
+    def country_repartition(self, params):
+        df = self.get_filter_tweets_with_cache(params)
+        df = df.round({"longitude": 1, "latitude": 1}).groupby(["longitude", "latitude"]).size()
+        return [(long, lat, count) for (long, lat), count in df.to_dict().items()]

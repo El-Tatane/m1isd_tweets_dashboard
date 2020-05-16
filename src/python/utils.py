@@ -52,7 +52,7 @@ def split_str_to_list(value, sep=",", other_sep=None):
 def clean_filter_value(dict_params):
     res = {}
     dict_all_info_filter = {"user_name": {"fun": [clean_special_char, clean_filter_string]},
-                            "place_country": {"fun": [clean_special_char, clean_filter_string]},
+                            "place_country": {"fun": [clean_special_char,split_str_to_list, clean_filter_string]},
                             "user_followers_count": {"fun": [clean_special_char, clean_filter_int, clean_filter_interval],
                                                      "params": {"minimum": 0}},
                             "lang": {"fun": [clean_special_char, clean_filter_string]},
@@ -63,7 +63,7 @@ def clean_filter_value(dict_params):
                                        "params": {"minimum": ts_created_twitter, "maximum": ts_now}},
                             "hashtag": {"fun": [clean_special_char, split_str_to_list, clean_filter_string]},
                             "ten_number": {"fun": [clean_special_char, clean_filter_int, clean_filter_interval],
-                                           "params": {"minimum": 0}},
+                                           "params": {"minimum": -1}},
                             "text": {"fun": [clean_special_char, split_str_to_list, clean_filter_string],
                                     "params": {"other_sep": " "}}
                             }

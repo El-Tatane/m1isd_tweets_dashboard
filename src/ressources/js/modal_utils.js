@@ -24,6 +24,7 @@ const closeModal = function (e){
 
     modal = null;
 
+    update_all()
 };
 
 const stopPropagation = function (e) {
@@ -31,7 +32,6 @@ const stopPropagation = function (e) {
 };
 
 {
-    console.log("start js")
     // prepare Modal
     modalLinks =document.getElementsByClassName("js-modal");
     for (const a of modalLinks){
