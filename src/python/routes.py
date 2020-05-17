@@ -16,27 +16,9 @@ data_loader = DataLoader()
 @set_route("/")
 def route_index(**args):
     template = TemplateBuilder("index.html")
-    template.insert_double_element("h1", "Analyse tweet")
-    # template.insert_raw_html('<button id="button_update" onclick=update_all()>UPDATE</button>')
-    template.insert_raw_html('<div>Total tweets : <span id="nb_total_tweet">...</span></div>')
-    template.insert_raw_html('<div>Total country : <span id="nb_total_country">...</span></div>')
-    template.insert_raw_html('<div>Total user : <span id="nb_total_user_name">...</span></div>')
-    template.insert_raw_html('<div>Total language : <span id="nb_total_lang">...</span></div>')
-    template.insert_raw_html('<div>From <span id="span_ts_start">...</span> to <span id="span_ts_end">...</span></div>')
-    template.insert_raw_html('<div>List tweet :</div>')
-    template.insert_raw_html('<table border="1"><tr>'
-                             '<th>user</th> <th>date</th> <th>text</th>'
-                             '</tr><tbody id="table_list_tweet"></tbody></table>')
-    template.insert_raw_html('<a onClick="fill_tweet_contain(\'start\')"> &lt&lt </a>')
-    template.insert_raw_html('<a onClick="fill_tweet_contain(\'before\')"> &lt </a>')
-    template.insert_raw_html('<span id="span_tweet_navigate_start"> 0 </span>')
-    template.insert_raw_html('<span> / </span>')
-    template.insert_raw_html('<span id="span_tweet_navigate_max"> 4 </span>')
-    template.insert_raw_html('<a onClick="fill_tweet_contain(\'next\')"> &gt </a>')
-    template.insert_raw_html('<a onClick="fill_tweet_contain(\'last\')"> &gt&gt </a>')
 
     mod = ModalTemplateBuilder("modal.html", "modal_filters", "Sauvegarder")
-    mod.insert_double_element("h1", "Filtrer les tweets")
+    mod.insert_double_element("h1", "Tweet Filters")
     mod.insert_simple_element("input placeholder='Pseudo' id='user_name' type='text'")
     mod.insert_simple_element("br")
     mod.insert_simple_element("input placeholder='Text' id='text' type='text'")
@@ -54,16 +36,39 @@ def route_index(**args):
     mod.insert_simple_element("input placeholder='Date fin' id='ts_end' type='datetime-local'")
     mod.insert_simple_element("br")
     mod.insert_simple_element("br")
+
+    template.insert_raw_html("<center><h1>Welcome to tweet Dashboard</h1></center>")
+    template.insert_raw_html(mod.link_to_open_model("Modifier les filtres", "id_button_open_modal"))
+    template.insert_raw_html('<h2><i>Summary</i></h2>')
+    template.insert_raw_html('<div><b>Total tweets :</b> <span id="nb_total_tweet">...</span></div>')
+    template.insert_raw_html('<div><b>Total country :</b> <span id="nb_total_country">...</span></div>')
+    template.insert_raw_html('<div><b>Total user :</b> <span id="nb_total_user_name">...</span></div>')
+    template.insert_raw_html('<div><b>Total language :</b> <span id="nb_total_lang">...</span></div>')
+    template.insert_raw_html('<div><b>From</b> <span id="span_ts_start">...</span> <b>to</b> <span id="span_ts_end">...</span></div>')
+    template.insert_raw_html('<h2><i>Tweet list</i></h2>')
+    template.insert_raw_html('<table border="1"><tr>'
+                             '<th>user</th> <th>date</th> <th>text</th>'
+                             '</tr><tbody id="table_list_tweet"></tbody></table>')
+    template.insert_raw_html("<center>")
+    template.insert_raw_html('<a onClick="fill_tweet_contain(\'start\')"> &lt&lt </a>')
+    template.insert_raw_html('<a onClick="fill_tweet_contain(\'before\')"> &lt </a>')
+    template.insert_raw_html('<span id="span_tweet_navigate_start"> 0 </span>')
+    template.insert_raw_html('<span> / </span>')
+    template.insert_raw_html('<span id="span_tweet_navigate_max"> 4 </span>')
+    template.insert_raw_html('<a onClick="fill_tweet_contain(\'next\')"> &gt </a>')
+    template.insert_raw_html('<a onClick="fill_tweet_contain(\'last\')"> &gt&gt </a>')
+    template.insert_raw_html("</center>")
     template.insert_raw_html(
+        '<h2><i>Language repartition</i></h2>'
         '<canvas id="canvas_pie" width="1500" height="600"> </canvas> '
+        '<h2><i>Hashtag repartition</i></h2>'
         '<br> <canvas id="canvas_hist" width="1500" height="800"> </canvas>'
-        '<br> <canvas id="canvas_map" width="1525" height="900"> </canvas>'
+        '<h2><i>Geographic repartition</i></h2>'
+        '<br> <canvas id="canvas_map" width="1500" height="900"> </canvas>'
         '<br> <div style = "display:none;">'
         '<img id="source" src="https://www.lri.fr/~kn/teaching/ld/projet/files/world_map.png" length="0" height="0">'
         '</div>'
     )
-    template.insert_simple_element("br")
-    template.insert_raw_html(mod.link_to_open_model("Modifier les filtres", "id_button_open_modal"))
     template.insert_raw_html(mod.get_html())
     return template.get_html()
 

@@ -1,1 +1,1 @@
-// update_all();
+update_all();

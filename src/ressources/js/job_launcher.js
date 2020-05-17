@@ -93,8 +93,6 @@ function get_correct_ten_number(ten_number_action){
 function fill_country_repartition() {
     serve.get_data('job/country_repartition', get_filter_data(), function(data) {
          // data [(longitude, latitude, count), ...]
-        console.log(data)
-        // rajoute ta fonction pour remplir la map ici
         map(data, "canvas_map");
     })
 }
@@ -102,8 +100,6 @@ function fill_country_repartition() {
 function fill_lang_repartition() {
     serve.get_data('job/lang_repartition', get_filter_data(), function(data) {
          // data {lang: count}
-        console.log(data)
-        // rajoute ta fonction pour remplir la lang
         pie(data, "canvas_pie");
     })
 }
@@ -111,10 +107,7 @@ function fill_lang_repartition() {
 function fill_hastag_repartition() {
     serve.get_data('job/hashtag_repartition', get_filter_data(), function(data) {
          // data {hashtag: count}
-        console.log(data)
-
-        // rajoute ta fonction pour remplir le hashtag
-        hist(data, "canvas_hist", "tweet hashtag", "tweet percentage", "Best 3 tweets percentage");
+        hist(data, "canvas_hist", "tweet hashtag", "tweet percentage", "Best 10 tweets percentage", 10);
     })
 }
 

@@ -15,13 +15,16 @@ class Request(http.server.SimpleHTTPRequestHandler):
         if self.path.endswith(".js"):
             mimetype = 'application/javascript'
             sendReply = True
+
         if self.path.endswith(".css"):
             mimetype = 'text/css'
             sendReply = True
 
+
         if sendReply == True:
             # Open the static file requested and send it
-            f = open(os.getcwd() + "/../"+ self.path)
+            f = open(os.getcwd() + "/../" + self.path)
+            print(self.path)
             self.send_response(200)
             self.send_header('Content-type', mimetype)
             self.end_headers()

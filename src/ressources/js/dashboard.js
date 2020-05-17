@@ -11,7 +11,7 @@ function sortProperties(dict, best_values_number) {
 
     // Create a new array with only the first best_values_number items
     let best_values = items.slice(0, best_values_number);
-    let dict_best_values = {}
+    let dict_best_values = {};
     for(let i=0; i<best_values.length; i++){
         dict_best_values[best_values[i][0]] = best_values[i][1]
     }
@@ -28,7 +28,7 @@ function canvas_data(dict_values){
         let color ;
         do{
           color = "#"+Math.floor(Math.random()*16777215).toString(16);
-        }while(color === "#000000")
+        }while(color === "#000000");
         colist.push(color);
     }
     return [datalist, labels, colist]
@@ -41,6 +41,7 @@ function pie(dict_values, html_canvas_id){
   let colist = data[2]
   let canvas = document.getElementById(html_canvas_id);
   let ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   let w = canvas.width
   let h = canvas.height
   let radius = h / 3 ;
@@ -92,24 +93,25 @@ function hist(dict_values, html_canvas_id, x_label, y_label, title, best_values_
       dict_values = sortProperties(dict_values, best_values_number)
   }
 
-  let data = canvas_data(dict_values)
+  let data = canvas_data(dict_values);
   let datalist= data[0];
   let labels = data[1];
   let colist = data[2];
   let canvas = document.getElementById(html_canvas_id);
   let total = 0;
-  for(let x=0; x < datalist.length; x++) { total += datalist[x]; };
-  let x_marge_value = canvas.width * 0.15
-  let y_marge_value = canvas.height * 0.15
+  for(let x=0; x < datalist.length; x++) { total += datalist[x]; }
+  let x_marge_value = canvas.width * 0.15;
+  let y_marge_value = canvas.height * 0.15;
   let ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.beginPath();
   ctx.moveTo(x_marge_value,canvas.height - y_marge_value);
   ctx.lineTo(x_marge_value,y_marge_value);
   ctx.moveTo(x_marge_value,canvas.height - y_marge_value);
   ctx.lineTo(canvas.width - x_marge_value,canvas.height - y_marge_value);
   ctx.stroke();
-  let graph_y = (canvas.height - 2*y_marge_value)/11
-  let y_pos = canvas.height - y_marge_value - graph_y
+  let graph_y = (canvas.height - 2*y_marge_value)/11;
+  let y_pos = canvas.height - y_marge_value - graph_y;
 
   for(let i=1; i<11; i++){
       ctx.beginPath();
@@ -140,7 +142,7 @@ function hist(dict_values, html_canvas_id, x_label, y_label, title, best_values_
      ctx.rect(rec_x, rec_y, rect_width, -rect_data_height)
      ctx.fill();
      ctx.closePath()
-     ctx.font = "10px Arial";
+     ctx.font = "15px Arial";
      ctx.textAlign = "center"
      ctx.fillText(labels[i], rec_x + (rect_width/2), rec_y + 20)
      rec_x = rec_x + 5 + rect_width
@@ -152,22 +154,23 @@ function hist(dict_values, html_canvas_id, x_label, y_label, title, best_values_
 }
 
 function map(list_values, html_canvas_id){
-    let canvas = document.getElementById(html_canvas_id)
-    let ctx  = canvas.getContext("2d")
-    let img = document.getElementById("source")
-    canvas.addEventListener('mousedown', onDown, false)
+    let canvas = document.getElementById(html_canvas_id);
+    let ctx  = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let img = document.getElementById("source");
+    canvas.addEventListener('mousedown', onDown, false);
     ctx.drawImage(img, 0, 0, canvas.clientWidth, canvas.clientHeight);
     for (let i=0; i<list_values.length; i++){
-        let longitude = list_values[i][0]
-        let latitude = list_values[i][1]
-        let latRad = latitude*Math.PI/180
+        let longitude = list_values[i][0];
+        let latitude = list_values[i][1];
+        let latRad = latitude*Math.PI/180;
 
-        let x = (canvas.clientWidth * (longitude + 180 - 10)/360) //- 10
-        let mercy = Math.log(Math.tan((Math.PI/4) + (latRad/2)))
-        let y = canvas.clientHeight/2 - canvas.clientWidth*mercy/(2*Math.PI)
+        let x = (canvas.clientWidth * (longitude + 180 - 10)/360);
+        let mercy = Math.log(Math.tan((Math.PI/4) + (latRad/2)));
+        let y = canvas.clientHeight/2 - canvas.clientWidth*mercy/(2*Math.PI);
 
         ctx.beginPath();
-        ctx.fillStyle="#FF4422"
+        ctx.fillStyle="#FF4422";
         ctx.arc(x, y, 1, 0, 2 * Math.PI);
         ctx.fill()
     }
