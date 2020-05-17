@@ -54,7 +54,14 @@ def route_index(**args):
     mod.insert_simple_element("input placeholder='Date fin' id='ts_end' type='datetime-local'")
     mod.insert_simple_element("br")
     mod.insert_simple_element("br")
-
+    template.insert_raw_html(
+        '<canvas id="canvas_pie" width="1500" height="600"> </canvas> '
+        '<br> <canvas id="canvas_hist" width="1500" height="800"> </canvas>'
+        '<br> <canvas id="canvas_map" width="1525" height="900"> </canvas>'
+        '<br> <div style = "display:none;">'
+        '<img id="source" src="https://www.lri.fr/~kn/teaching/ld/projet/files/world_map.png" length="0" height="0">'
+        '</div>'
+    )
     template.insert_simple_element("br")
     template.insert_raw_html(mod.link_to_open_model("Modifier les filtres", "id_button_open_modal"))
     template.insert_raw_html(mod.get_html())
