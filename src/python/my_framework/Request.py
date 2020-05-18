@@ -1,10 +1,12 @@
-import http.server
+from http.server import HTTPServer, BaseHTTPRequestHandler
 import warnings, os
+from socketserver import ThreadingMixIn
+import threading
 
 from my_framework.router import ROUTES, clean_route
 
 
-class Request(http.server.SimpleHTTPRequestHandler):
+class Request(BaseHTTPRequestHandler):
 
     def do_GET(self):
 
@@ -77,3 +79,6 @@ class Request(http.server.SimpleHTTPRequestHandler):
             warnings.warn("Incorrect URL '{}".format(string))
             return None, {}
 
+
+class ThreadedRequest(ThreadingMixIn, HTTPServer):
+    """Handle requests in a separate thread."""
