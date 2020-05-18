@@ -156,6 +156,7 @@ function hist(dict_values, html_canvas_id, x_label, y_label, title, best_values_
 function map(list_values, html_canvas_id){
     let canvas = document.getElementById(html_canvas_id);
     let ctx  = canvas.getContext("2d");
+    console.log(canvas.clientWidth, canvas.clientHeight)
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     let img = document.getElementById("source");
     canvas.addEventListener('mousedown', onDown, false);
@@ -167,7 +168,8 @@ function map(list_values, html_canvas_id){
 
         let x = (canvas.clientWidth * (longitude + 180 - 10)/360);
         let mercy = Math.log(Math.tan((Math.PI/4) + (latRad/2)));
-        let y = canvas.clientHeight/2 - canvas.clientWidth*mercy/(2*Math.PI);
+        let y =  canvas.clientHeight /2 - canvas.clientWidth*mercy/(2*Math.PI);
+
 
         ctx.beginPath();
         ctx.fillStyle="#FF4422";

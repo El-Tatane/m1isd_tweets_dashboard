@@ -142,5 +142,5 @@ class DataLoader(metaclass=mf.Singleton):
 
     def country_repartition(self, params):
         df = self.get_filter_tweets_with_cache(params)
-        df = df.round({"longitude": 1, "latitude": 6}).groupby(["longitude", "latitude"]).size()
+        df = df.round({"longitude": 6, "latitude": 6}).groupby(["longitude", "latitude"]).size()
         return [(long, lat, count) for (long, lat), count in df.to_dict().items()]

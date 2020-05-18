@@ -24,9 +24,13 @@ function ts_to_datetime(ts) {
     + ('0' + date.getHours()).slice(-2) + ":" + ('0' + date.getMinutes()).slice(-2);
 }
 
-function datetime_to_ts(string) {
+function datetime_to_ts(dateString) {
     // format dd/mm/YYYY HH:MM
+    let dateTimeParts = dateString.split(' ');
+    let timeParts = dateTimeParts[1].split(':');
+    let dateParts = dateTimeParts[0].split('/');
 
-    let date = new Date(string);
+    let date = new Date(dateParts[2], parseInt(dateParts[1], 10) - 1, dateParts[0], timeParts[0], timeParts[1]);
+
     return Math.floor(date.getTime() / 1000);
 }

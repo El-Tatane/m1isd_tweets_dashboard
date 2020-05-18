@@ -1,5 +1,5 @@
 list_file_path:
-  - "D:/CloudStation/Cours/4ISD/langage_dynamique/python/data/tweets.csv"
-
+#  - "/data/tweets.csv"
+  - D:/CloudStation/Cours/4ISD/langage_dynamique/python/data/tweets.csv
 port: 80
 cache_size: 10

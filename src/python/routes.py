@@ -31,9 +31,10 @@ def route_index(**args):
     mod.insert_simple_element("br")
     mod.insert_simple_element("input placeholder='Langue' id='lang' type='integer'")
     mod.insert_simple_element("br")
-    mod.insert_simple_element("input placeholder='Date début' id='ts_start' type='datetime-local'")
+    mod.insert_simple_element("input placeholder='Date début' id='ts_start' type='text'")
     mod.insert_double_element("span", " à ")
-    mod.insert_simple_element("input placeholder='Date fin' id='ts_end' type='datetime-local'")
+    mod.insert_simple_element("input placeholder='Date fin' id='ts_end' type='text'")
+    mod.insert_raw_html("<div>Format date : jj/mm/aaaa hh:mm</div>")
     mod.insert_simple_element("br")
     mod.insert_simple_element("br")
 
@@ -64,7 +65,7 @@ def route_index(**args):
         '<h2><i>Hashtag repartition</i></h2>'
         '<br> <canvas id="canvas_hist" width="1500" height="800"> </canvas>'
         '<h2><i>Geographic repartition</i></h2>'
-        '<br> <canvas id="canvas_map" width="1500" height="900"> </canvas>'
+        '<br> <canvas id="canvas_map" width="1129" height="846"> </canvas>'
         '<br> <div style = "display:none;">'
         '<img id="source" src="https://www.lri.fr/~kn/teaching/ld/projet/files/world_map.png" length="0" height="0">'
         '</div>'
