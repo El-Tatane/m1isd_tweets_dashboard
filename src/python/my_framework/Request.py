@@ -1,7 +1,6 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import warnings, os
 from socketserver import ThreadingMixIn
-import threading
 
 from my_framework.router import ROUTES, clean_route
 
@@ -15,17 +14,25 @@ class Request(BaseHTTPRequestHandler):
 
         sendReply = False
         if self.path.endswith(".js"):
+            # delete first / because os.path.join didn't work later :
+            # https://stackoverflow.com/questions/1945920/why-doesnt-os-path-join-work-in-this-case
+            self.path = self.path[1:]
             mimetype = 'application/javascript'
             sendReply = True
 
         if self.path.endswith(".css"):
+            # Same idea
+            self.path = self.path[1:]
             mimetype = 'text/css'
             sendReply = True
 
 
         if sendReply == True:
             # Open the static file requested and send it
-            f = open(os.getcwd() + "/../" + self.path)
+            this_dir = os.path.dirname(__file__)
+            print("ii", this_dir, self.path)
+            print(os.path.join(this_dir, "..", "..", self.path))
+            f = open(os.path.join(this_dir, "..", "..", self.path))
             self.send_response(200)
             self.send_header('Content-type', mimetype)
             self.end_headers()

@@ -8,6 +8,7 @@ services:
           dockerfile: Dockerfile
         volumes:
           - ${DATA_PATH}:/data/
+          - D:\CloudStation\Cours\4ISD\langage_dynamique\python:/app/
         ports:
             - "${CONTAINER_PORT}:80"
         env_file:
