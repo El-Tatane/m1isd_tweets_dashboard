@@ -3,7 +3,11 @@ import os
 
 
 # Read configuration file
-this_dir = os.path.dirname(__file__)
-with open(os.path.join(this_dir, "../..", "config.yml"), 'r') as stream:
+root_dir = os.path.join(os.path.dirname(__file__), "..",  "..")
+src_dir = os.path.join(root_dir, "src")
+template_dir = os.path.join(root_dir, "src", "ressources", "templates")
+
+
+with open(os.path.join(root_dir, "config.yml"), 'r') as stream:
     DICT_CONFIG = safe_load(stream)
 

@@ -5,8 +5,8 @@ from my_framework.Orchestrator import JOB_RESULTS, set_orchestrator
 import json
 from DataLoader import DataLoader
 from utils import clean_filter_value
-import time
-
+from initialization import template_dir
+import os
 data_loader = DataLoader()
 
 
@@ -15,11 +15,12 @@ data_loader = DataLoader()
 
 @set_route("/")
 def route_index(**args):
-    template = TemplateBuilder("index.html")
-
-    mod = ModalTemplateBuilder("modal.html", "modal_filters", "Sauvegarder")
+    template = TemplateBuilder(os.path.join(template_dir, "index.html"))
+    mod = ModalTemplateBuilder(os.path.join(template_dir, "modal.html"), "modal_filters", "Sauvegarder")
+    
     mod.insert_double_element("h1", "Tweet Filters")
-    mod.insert_simple_element("input placeholder='Pseudo use , for several' id='user_name' type='text'")
+    mod.insert_simple_element("input placeholder='username' id='user_name' type='text'")
+    mod.insert_raw_html("<span>  separor : ,  </span>")
     mod.insert_simple_element("br")
     mod.insert_simple_element("input placeholder='Text  use , for several' id='text' type='text'")
     mod.insert_simple_element("br")

@@ -22,20 +22,22 @@ class DataLoader(metaclass=mf.Singleton):
     def filter_text_equal_tweets(self, df_tweets, column_name, list_word):
         if isinstance(list_word, str):
             list_word = [list_word]
-        return df_tweets[df_tweets[column_name].isin(list_word)]
+        list_word = [ x.lower() for x in list_word ]
+        return df_tweets[df_tweets[column_name].str.lower().isin(list_word)]
 
     def filter_text_contain_tweets(self, df_tweets, column_name, list_word):
-        fun = lambda x: [i for i in x.split(' ') if i in list_word] != []     # OR
+        fun = lambda x: [i.lower() for i in x.split(' ') if i in list_word] != []     # OR
         # fun = lambda x: set(list_word).issubset(x.split(' '))                   # AND
-        return df_tweets.loc[(df_tweets[column_name].apply(fun))]
+        return df_tweets.loc[(df_tweets[column_name].str.lower().apply(fun))]
 
     def filter_hashtag_tweets(self, df_tweets, list_word):
         if isinstance(list_word, str):
             list_word = [list_word]
+        list_word = [x.lower() for x in list_word]
         return df_tweets.loc[
-                (df_tweets['hashtag_0'].isin(list_word)) |
-                (df_tweets['hashtag_1'].isin(list_word)) |
-                (df_tweets['hashtag_2'].isin(list_word))
+                (df_tweets['hashtag_0'].str.lower().isin(list_word)) |
+                (df_tweets['hashtag_1'].str.lower().isin(list_word)) |
+                (df_tweets['hashtag_2'].str.lower().isin(list_word))
             ]
 
     def filter_user_followers_count_tweets(self, df_tweets, followers_number):
