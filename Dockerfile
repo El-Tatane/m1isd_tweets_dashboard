@@ -25,4 +25,5 @@ RUN python3 -m pip install --upgrade pip && \
 
 # Define default command
 ENTRYPOINT [ "python3", "/app/src/python/main.py" ]
+#ENTRYPOINT [ "bash", "/app/scripts/pytest.sh" ]
 #CMD tail -f /dev/null

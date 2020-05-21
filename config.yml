@@ -1,6 +1,5 @@
 list_filename:
   - tweets.csv
-#  - D:\CloudStation\Cours\4ISD\langage_dynamique\python\data\tweets.csv
 data_path: /data  # path in docker (don't modify)
 port: 80
 cache_size: 10

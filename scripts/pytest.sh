@@ -1,1 +1,1 @@
-cd ../tests && pytest
+cd /app/tests && pytest
