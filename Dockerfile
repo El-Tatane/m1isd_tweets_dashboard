@@ -17,10 +17,12 @@ ENV LC_ALL en_US.UTF-8
 COPY ./ /app/
 
 RUN ln -s /app/src/python/my_framework /usr/lib/python3/dist-packages/
+# use to pytest
+RUN ln -s /app/src/python/ /usr/lib/python3/dist-packages/my_code
 
 RUN python3 -m pip install --upgrade pip && \
     python3 -m pip install --no-cache-dir -r /app/requirements.txt
 
 # Define default command
-#ENTRYPOINT [ "python3", "/app/src/python/main.py" ]
-CMD tail -f /dev/null
+ENTRYPOINT [ "python3", "/app/src/python/main.py" ]
+#CMD tail -f /dev/null

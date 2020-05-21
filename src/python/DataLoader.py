@@ -1,22 +1,22 @@
 import pandas as pd
 import my_framework as mf
-from initialization import DICT_CONFIG
 from threading import Lock
+import os
 
 lock = Lock()
 
 
 class DataLoader(metaclass=mf.Singleton):
 
-    def __init__(self, list_path=None):
-        if list_path is None:
-            list_path = []
+    def __init__(self,  data_path=None, list_filename=None, size_cache=1):
+        if list_filename is None:
+            list_filename = []
 
         self.df_raw_data = pd.DataFrame()
-        self.cache = mf.Cache(DICT_CONFIG["cache_size"])
+        self.cache = mf.Cache(size_cache)
 
-        for path in list_path:
-            df_tweets = pd.read_csv(path, delimiter=",", parse_dates=["date"])
+        for filename in list_filename:
+            df_tweets = pd.read_csv(os.path.join(data_path, filename), delimiter=",", parse_dates=["date"])
             self.df_raw_data = pd.concat([self.df_raw_data, df_tweets], axis=0, sort=True, ignore_index=True)
 
     def filter_text_equal_tweets(self, df_tweets, column_name, list_word):
@@ -26,7 +26,8 @@ class DataLoader(metaclass=mf.Singleton):
         return df_tweets[df_tweets[column_name].str.lower().isin(list_word)]
 
     def filter_text_contain_tweets(self, df_tweets, column_name, list_word):
-        fun = lambda x: [i.lower() for i in x.split(' ') if i in list_word] != []     # OR
+        list_word = list(map(lambda x: x.lower(), list_word))
+        fun = lambda x: [i for i in x.split(' ') if i in list_word] != []     # OR
         # fun = lambda x: set(list_word).issubset(x.split(' '))                   # AND
         return df_tweets.loc[(df_tweets[column_name].str.lower().apply(fun))]
 

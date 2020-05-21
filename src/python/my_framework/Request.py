@@ -30,8 +30,6 @@ class Request(BaseHTTPRequestHandler):
         if sendReply == True:
             # Open the static file requested and send it
             this_dir = os.path.dirname(__file__)
-            print("ii", this_dir, self.path)
-            print(os.path.join(this_dir, "..", "..", self.path))
             f = open(os.path.join(this_dir, "..", "..", self.path))
             self.send_response(200)
             self.send_header('Content-type', mimetype)

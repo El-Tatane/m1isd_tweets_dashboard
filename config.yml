@@ -1,5 +1,6 @@
-list_file_path:
-#  - "/data/tweets.csv"
-  - D:/Users/zakar/Documents/Mes_Documents_2019_2020/ISD/semestre1/langages_dynamiques/KN/projetJavaScript/m1isd_tweets_dashboard/tweets.csv
+list_filename:
+  - tweets.csv
+#  - D:\CloudStation\Cours\4ISD\langage_dynamique\python\data\tweets.csv
+data_path: /data  # path in docker (don't modify)
 port: 80
 cache_size: 10
