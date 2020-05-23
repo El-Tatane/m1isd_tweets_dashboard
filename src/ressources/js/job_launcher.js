@@ -107,7 +107,7 @@ function fill_lang_repartition() {
 function fill_hastag_repartition() {
     serve.get_data('job/hashtag_repartition', get_filter_data(), function(data) {
          // data {hashtag: count}
-        hist(data, "canvas_hist", "tweet hashtag", "tweet percentage", "Best 10 tweets percentage", 10);
+        hist(data, "canvas_hist", "tweet hashtag", "tweet percentage", "Best 6 tweets percentage", 6);
     })
 }
 
