@@ -82,9 +82,10 @@ def route_index(**args):
 
 @set_route("error_404")
 def route_404(**args):
-    template = TemplateBuilder("index.html")
+    template = TemplateBuilder(os.path.join(template_dir, "index.html"))
     template.insert_double_element("h1", "ERREUR 404")
     template.insert_double_element("p", """Vous avez entrée un lien incorrect""")
+    template.insert_raw_html("<img src='https://http.cat/404'>")
     return template.get_html()
 
 
