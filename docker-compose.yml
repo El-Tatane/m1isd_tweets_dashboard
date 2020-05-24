@@ -12,3 +12,4 @@ services:
             - "${CONTAINER_PORT}:80"
         env_file:
             - .env
+        entrypoint: ${ENTRYPOINT}
