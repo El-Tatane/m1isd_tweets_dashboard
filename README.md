@@ -1,7 +1,7 @@
 # READ ME
 
 ## Preparez environnement
-####Dans le fichier /.env:
+#### Dans le fichier /.env:
 1. Modifier la variable DATA_PATH pour y mettre le chemin contenant les fichiers
 des tweets
 
